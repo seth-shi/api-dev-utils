@@ -1,0 +1,16 @@
+{
+    "name": "seth-shi/laravel-api-component",
+    "description": "api dev component, response, cache",
+    "authors": [
+        {
+            "name": "seth-shi",
+            "email": "1033404553@qq.com"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+
+    }
+}
