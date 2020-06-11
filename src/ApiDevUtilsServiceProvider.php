@@ -14,7 +14,7 @@ class ApiDevUtilsServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->publishes([__DIR__.'/../config/utils.php' => config_path('utils.php')]);
+            $this->publishes([__DIR__.'/../config/utils.php' => config_path('utils.php')], 'config');
         }
     }
 
