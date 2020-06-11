@@ -3,7 +3,7 @@
 return [
     
     'api_cache' => [
-        'enable' => env('API_CACHE'),
+        'enable' => env('API_CACHE', false),
         'global_ttl' => 60 * 60,
         'routes' => [
             

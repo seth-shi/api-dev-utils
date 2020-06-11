@@ -31,7 +31,7 @@ class CacheResponseMiddleware
         }
         
         
-        $uri = $request->route()->getUri();
+        $uri = $request->route()->uri();
         if (! isset($cacheConfig['routes'][$uri])) {
             
             return $next($request);
