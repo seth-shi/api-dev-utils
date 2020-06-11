@@ -40,9 +40,9 @@ class CacheResponseMiddleware
         $routeConfig = $cacheConfig['routes'][$uri];
         $parameters = $this->assemble($routeConfig[0] ?? [], $request->all());
         $headers = $this->assemble($routeConfig[1] ?? [], $request->headers->all());
-        $ttl = $routeConfig[3] ?? $cacheConfig['global_ttl'];
+        $ttl = $routeConfig[2] ?? $cacheConfig['global_ttl'];
         
-        $cacheKey = $uri . ':' . http_build_query(array_merge($parameters, $headers));
+        $cacheKey = http_build_query(array_merge($parameters, $headers));
         // cache options
         $cacheStore = Cache::tags($uri);
         
@@ -52,7 +52,7 @@ class CacheResponseMiddleware
             $cacheResponse = $next($request);
             $cacheStore->put($cacheKey, $cacheResponse, $ttl);
         }
-        
+
         return $cacheResponse;
     }
     
