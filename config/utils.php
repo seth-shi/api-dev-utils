@@ -7,7 +7,7 @@ return [
         'global_ttl' => 60 * 60,
         'routes' => [
             
-            'hello' => [
+            'api/v1/hello' => [
                 // query parameters
                 ['name', 'age'],
                 
