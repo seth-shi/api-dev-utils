@@ -32,6 +32,8 @@ class CacheResponseMiddleware
         
         
         $uri = $request->route()->uri();
+        // cache key is path, not uri
+        $path = $request->path();
         if (! isset($cacheConfig['routes'][$uri])) {
             
             return $next($request);
@@ -44,7 +46,7 @@ class CacheResponseMiddleware
         
         $cacheKey = http_build_query(array_merge($parameters, $headers));
         // cache options
-        $cacheStore = Cache::tags($uri);
+        $cacheStore = Cache::tags($path);
         
         $cacheResponse = $cacheStore->get($cacheKey);
         if (is_null($cacheResponse)) {
