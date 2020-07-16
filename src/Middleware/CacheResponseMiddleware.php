@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Optional;
+use SethShi\ApiDevUtils\Hooks\PutCacheHook;
 
 class CacheResponseMiddleware
 {
@@ -30,8 +32,10 @@ class CacheResponseMiddleware
             return $next($request);
         }
         
-        
         $uri = $request->route()->uri();
+        if (is_null($uri)) {
+            return $next($request);
+        }
         // cache key is path, not uri
         $path = $request->path();
         if (! isset($cacheConfig['routes'][$uri])) {
@@ -47,12 +51,26 @@ class CacheResponseMiddleware
         $cacheKey = http_build_query(array_merge($parameters, $headers));
         // cache options
         $cacheStore = Cache::tags($path);
-        
         $cacheResponse = $cacheStore->get($cacheKey);
         if (is_null($cacheResponse)) {
             
             $cacheResponse = $next($request);
-            $cacheStore->put($cacheKey, $cacheResponse, $ttl);
+            $putHook = $cacheConfig['put_hook'] ?? null;
+            if (
+                class_exists($putHook)
+            ) {
+                
+                $object = app($putHook);
+                if (
+                    $object instanceof PutCacheHook &&
+                    $object->cacheAble($request, $cacheResponse)
+                ) {
+    
+                    $cacheStore->put($cacheKey, $cacheResponse, $ttl);
+                }
+            } else {
+                $cacheStore->put($cacheKey, $cacheResponse, $ttl);
+            }
         }
 
         return $cacheResponse;

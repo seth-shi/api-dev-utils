@@ -4,6 +4,8 @@ return [
     
     'api_cache' => [
         'enable' => env('API_CACHE', false),
+        // put cache 之前的操作,如需要重写需继承此类
+        'put_hook' => \SethShi\ApiDevUtils\Hooks\PutCacheHook::class,
         'global_ttl' => 60 * 60,
         'routes' => [
             
